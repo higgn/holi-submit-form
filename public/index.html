@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,39 +27,146 @@
         }
 
         body {
-            background-color: var(--light-bg);
             color: var(--dark-text);
             line-height: 1.6;
+            overflow-x: hidden;
+            background-color: var(--light-bg);
+        }
+
+        /* Video Background */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .video-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        #holiVideo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translateX(-50%) translateY(-50%);
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .color-splash {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            opacity: 0;
+            animation: splashAnimation 3s ease-out forwards;
+        }
+
+        @keyframes splashAnimation {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: scale(15);
+                opacity: 0;
+            }
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 10;
         }
 
         .header {
             text-align: center;
             margin-bottom: 2rem;
-            animation: colorChange 10s infinite;
+            animation: fadeInUp 1s ease-out;
             padding: 20px;
             border-radius: 8px;
-            background-color: var(--white);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes colorChange {
-            0% { color: var(--pink); }
-            20% { color: var(--purple); }
-            40% { color: var(--blue); }
-            60% { color: var(--green); }
-            80% { color: var(--yellow); }
-            100% { color: var(--pink); }
+            0% {
+                color: var(--pink);
+            }
+
+            20% {
+                color: var(--purple);
+            }
+
+            40% {
+                color: var(--blue);
+            }
+
+            60% {
+                color: var(--green);
+            }
+
+            80% {
+                color: var(--yellow);
+            }
+
+            100% {
+                color: var(--pink);
+            }
         }
 
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
+            animation: colorChange 10s infinite;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .header p {
@@ -67,13 +175,15 @@
         }
 
         .form-card {
-            background: var(--white);
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
             padding: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
+            animation: fadeInUp 1s ease-out 0.3s both;
         }
 
         .form-card::before {
@@ -97,18 +207,23 @@
             color: var(--purple);
         }
 
-        input, select {
+        input,
+        select {
             width: 100%;
-            padding: 12px;
+            padding: 12px 15px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 16px;
-            transition: border 0.3s ease;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.7);
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             outline: none;
             border-color: var(--purple);
+            box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.2);
+            background-color: white;
         }
 
         .file-upload {
@@ -116,16 +231,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 30px;
             border: 2px dashed var(--blue);
-            border-radius: 6px;
-            background-color: #f5f8ff;
+            border-radius: 8px;
+            background-color: rgba(245, 248, 255, 0.7);
             transition: all 0.3s ease;
         }
 
         .file-upload:hover {
-            background-color: #eef2ff;
+            background-color: rgba(238, 242, 255, 0.9);
             border-color: var(--purple);
+            transform: translateY(-3px);
         }
 
         .file-upload-input {
@@ -146,8 +262,13 @@
         }
 
         .file-upload-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
+            font-size: 50px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .file-upload:hover .file-upload-icon {
+            transform: scale(1.1);
         }
 
         .file-name {
@@ -159,37 +280,79 @@
         .submit-btn {
             display: block;
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             background-color: var(--purple);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
         .submit-btn:hover {
             background-color: #7b1fa2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .success-message, .error-message {
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .submit-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        .success-message,
+        .error-message {
             padding: 15px;
-            border-radius: 4px;
+            border-radius: 8px;
             margin-bottom: 20px;
             text-align: center;
             display: none;
+            animation: fadeInUp 0.5s ease-out;
+            font-weight: 500;
         }
 
         .success-message {
-            background-color: #dff0d8;
+            background-color: rgba(223, 240, 216, 0.9);
             color: #3c763d;
             border: 1px solid #d6e9c6;
         }
 
         .error-message {
-            background-color: #f2dede;
+            background-color: rgba(242, 222, 222, 0.9);
             color: #a94442;
             border: 1px solid #ebccd1;
         }
@@ -205,14 +368,54 @@
             height: 20px;
             border-radius: 50%;
             margin: 0 5px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
         }
 
-        .dot-1 { background-color: var(--pink); }
-        .dot-2 { background-color: var(--purple); }
-        .dot-3 { background-color: var(--blue); }
-        .dot-4 { background-color: var(--green); }
-        .dot-5 { background-color: var(--yellow); }
-        .dot-6 { background-color: var(--orange); }
+        .dot-1 {
+            background-color: var(--pink);
+            animation-delay: 0s;
+        }
+
+        .dot-2 {
+            background-color: var(--purple);
+            animation-delay: 0.4s;
+        }
+
+        .dot-3 {
+            background-color: var(--blue);
+            animation-delay: 0.8s;
+        }
+
+        .dot-4 {
+            background-color: var(--green);
+            animation-delay: 1.2s;
+        }
+
+        .dot-5 {
+            background-color: var(--yellow);
+            animation-delay: 1.6s;
+        }
+
+        .dot-6 {
+            background-color: var(--orange);
+            animation-delay: 2s;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
 
         .loading-spinner {
             display: none;
@@ -226,7 +429,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         footer {
@@ -235,6 +440,11 @@
             padding: 20px 0;
             color: var(--dark-text);
             font-size: 0.9rem;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 1s ease-out 0.6s both;
         }
 
         /* Responsive styles */
@@ -242,22 +452,36 @@
             .container {
                 padding: 10px;
             }
-            
+
             .header h1 {
                 font-size: 2rem;
             }
-            
+
             .form-card {
                 padding: 20px;
             }
-            
+
             .submit-btn {
                 padding: 12px;
             }
         }
     </style>
 </head>
+
 <body>
+    <!-- Loading Screen with Color Splash Effect -->
+    <div class="loading-screen" id="loadingScreen">
+        <!-- Color splashes will be added dynamically via JS -->
+    </div>
+
+    <!-- Video Background -->
+    <div class="video-container">
+        <video id="holiVideo" autoplay muted loop playsinline>
+            <source src="holi.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>SoftZeal Club - Holi 2025</h1>
@@ -279,18 +503,18 @@
             <div class="error-message" id="errorMessage">
                 There was an error with your submission. Please try again.
             </div>
-            
+
             <form id="uploadForm">
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <input type="text" id="name" name="name" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
                     <input type="tel" id="phone" name="phone" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="class">Class/Year</label>
                     <select id="class" name="class" required>
@@ -302,7 +526,7 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label>Upload Your Holi Program File</label>
                     <div class="file-upload">
@@ -315,31 +539,58 @@
                         <div class="file-name" id="fileName"></div>
                     </div>
                 </div>
-                
+
                 <button type="submit" class="submit-btn">Submit Your Program</button>
             </form>
-            
+
             <div class="loading-spinner" id="loadingSpinner"></div>
         </div>
-        
+
         <footer>
             <p>© 2025 SoftZeal Club. All rights reserved.</p>
             <p>A colorful celebration of coding and creativity!</p>
-            <a href="admin.html" style="color: var(--purple); text-decoration: none; margin-top: 10px; display: inline-block;">Admin Login</a>
+            <a href="admin.html"
+                style="color: var(--purple); text-decoration: none; margin-top: 10px; display: inline-block;">Admin
+                Login</a>
         </footer>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            // Splash color animation on loading screen
+            const loadingScreen = document.getElementById('loadingScreen');
+            const colors = ['#ff3e6c', '#9c27b0', '#1976d2', '#4CAF50', '#ffc107', '#ff5722'];
+
+            // Create color splashes
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const splash = document.createElement('div');
+                    splash.classList.add('color-splash');
+                    splash.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    splash.style.left = Math.random() * 100 + '%';
+                    splash.style.top = Math.random() * 100 + '%';
+
+                    loadingScreen.appendChild(splash);
+                }, i * 300);
+            }
+
+            // Hide loading screen after animations
+            setTimeout(() => {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.visibility = 'hidden';
+                }, 500);
+            }, 3500);
+
             // File upload handling
             const fileUpload = document.getElementById('fileUpload');
             const fileName = document.getElementById('fileName');
-            
-            fileUpload.addEventListener('change', function() {
+
+            fileUpload.addEventListener('change', function () {
                 if (this.files && this.files[0]) {
                     const file = this.files[0];
                     fileName.textContent = file.name;
-                    
+
                     // Check file size (max 5MB)
                     if (file.size > 5 * 1024 * 1024) {
                         alert('File size exceeds 5MB limit. Please choose a smaller file.');
@@ -348,53 +599,54 @@
                     }
                 }
             });
-            
+
             // Form submission
             const form = document.getElementById('uploadForm');
             const successMessage = document.getElementById('successMessage');
             const errorMessage = document.getElementById('errorMessage');
             const loadingSpinner = document.getElementById('loadingSpinner');
-            
-            form.addEventListener('submit', function(e) {
+
+            form.addEventListener('submit', function (e) {
                 e.preventDefault();
-                
+
                 // Hide any previous messages
                 successMessage.style.display = 'none';
                 errorMessage.style.display = 'none';
-                
+
                 // Show loading spinner
                 loadingSpinner.style.display = 'block';
-                
+
                 // Create FormData object
                 const formData = new FormData(form);
-                
+
                 // Send data to server
                 fetch('/api/submit', {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => {
-                    loadingSpinner.style.display = 'none';
-                    
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    successMessage.style.display = 'block';
-                    form.reset();
-                    fileName.textContent = '';
-                    
-                    // Scroll to success message
-                    successMessage.scrollIntoView({ behavior: 'smooth' });
-                })
-                .catch(error => {
-                    errorMessage.style.display = 'block';
-                    console.error('Error:', error);
-                });
+                    .then(response => {
+                        loadingSpinner.style.display = 'none';
+
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        successMessage.style.display = 'block';
+                        form.reset();
+                        fileName.textContent = '';
+
+                        // Scroll to success message
+                        successMessage.scrollIntoView({ behavior: 'smooth' });
+                    })
+                    .catch(error => {
+                        errorMessage.style.display = 'block';
+                        console.error('Error:', error);
+                    });
             });
         });
     </script>
 </body>
+
 </html>
