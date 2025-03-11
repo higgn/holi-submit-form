@@ -8,9 +8,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const app = express();
 const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGO_URI;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // MongoDB connection
-const MONGO_URI = 'mongodb+srv://gagan:LoveGood123@cluster0.vy4al.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 mongoose.connect(MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
@@ -58,8 +59,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Secret for JWT
-const JWT_SECRET = 'softzeal-holi-secret-2025';
 
 // Authentication middleware
 const authenticate = (req, res, next) => {
@@ -133,7 +132,7 @@ app.post('/api/login', async (req, res) => {
     
     // In a real application, you would hash and compare passwords
     // For this demo, we're using a simple string comparison
-    if (password === 'SoftZeal2025') {
+    if (password === process.env.ADMIN_PASSWORD) {
       // Generate JWT token
       const token = jwt.sign({
         admin: true
