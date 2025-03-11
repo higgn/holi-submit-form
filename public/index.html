@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SoftZeal Club - Holi Upload Form</title>
+    <!-- Google Fonts import -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Raleway:wght@700;800&display=swap" rel="stylesheet">
     <style>
         /* Holi-inspired color palette */
         :root {
@@ -23,7 +27,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
@@ -163,15 +167,42 @@
         }
 
         .header h1 {
-            font-size: 2.5rem;
+            font-family: 'Raleway', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
             margin-bottom: 10px;
             animation: colorChange 10s infinite;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 1px;
         }
 
         .header p {
             font-size: 1.2rem;
             color: var(--dark-text);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* Dynamic Border Animation */
+        @keyframes borderAnimation {
+            0% {
+                border-image-source: linear-gradient(45deg, var(--pink), var(--purple));
+            }
+            20% {
+                border-image-source: linear-gradient(90deg, var(--purple), var(--blue));
+            }
+            40% {
+                border-image-source: linear-gradient(135deg, var(--blue), var(--green));
+            }
+            60% {
+                border-image-source: linear-gradient(180deg, var(--green), var(--yellow));
+            }
+            80% {
+                border-image-source: linear-gradient(225deg, var(--yellow), var(--orange));
+            }
+            100% {
+                border-image-source: linear-gradient(270deg, var(--orange), var(--pink));
+            }
         }
 
         .form-card {
@@ -184,20 +215,28 @@
             position: relative;
             overflow: hidden;
             animation: fadeInUp 1s ease-out 0.3s both;
+            border: 3px solid;
+            border-color:#f8f5ff;
         }
 
-        .form-card::before {
+        /* Adding glow effect to the border */
+        .form-card::after {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(to right, var(--pink), var(--purple), var(--blue), var(--green), var(--yellow), var(--orange));
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--pink), var(--purple), var(--blue), var(--green), var(--yellow), var(--orange));
+            z-index: -1;
+            filter: blur(15px);
+            opacity: 0.7;
+            border-radius: 14px;
+            animation: borderAnimation 10s infinite alternate;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         label {
@@ -205,17 +244,21 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: var(--purple);
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
         }
 
         input,
         select {
             width: 100%;
-            padding: 12px 15px;
+            padding: 14px 15px;
             border: 1px solid #ddd;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
             transition: all 0.3s ease;
             background-color: rgba(255, 255, 255, 0.7);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
         }
 
         input:focus,
@@ -236,6 +279,25 @@
             border-radius: 8px;
             background-color: rgba(245, 248, 255, 0.7);
             transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .file-upload::after {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, var(--blue), var(--purple));
+            z-index: -1;
+            filter: blur(15px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .file-upload:hover::after {
+            opacity: 0.5;
         }
 
         .file-upload:hover {
@@ -259,6 +321,7 @@
             flex-direction: column;
             align-items: center;
             color: var(--blue);
+            font-weight: 500;
         }
 
         .file-upload-icon {
@@ -285,6 +348,7 @@
             color: white;
             border: none;
             border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -292,6 +356,8 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .submit-btn:hover {
@@ -445,6 +511,21 @@
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             animation: fadeInUp 1s ease-out 0.6s both;
+            font-weight: 300;
+        }
+
+        footer a {
+            color: var(--purple);
+            text-decoration: none;
+            margin-top: 10px;
+            display: inline-block;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--pink);
+            transform: translateY(-2px);
         }
 
         /* Responsive styles */
@@ -549,9 +630,7 @@
         <footer>
             <p>© 2025 SoftZeal Club. All rights reserved.</p>
             <p>A colorful celebration of coding and creativity!</p>
-            <a href="admin.html"
-                style="color: var(--purple); text-decoration: none; margin-top: 10px; display: inline-block;">Admin
-                Login</a>
+            <a href="admin.html">Admin Login</a>
         </footer>
     </div>
 
