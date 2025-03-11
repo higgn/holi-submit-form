@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoftZeal Admin Dashboard</title>
+    <style>
+        /* Holi-inspired color palette */
+        :root {
+            --pink: #ff3e6c;
+            --purple: #9c27b0;
+            --blue: #1976d2;
+            --green: #4CAF50;
+            --yellow: #ffc107;
+            --orange: #ff5722;
+            --light-bg: #f8f5ff;
+            --white: #ffffff;
+            --dark-text: #333333;
+            --light-gray: #f5f5f5;
+            --border-color: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: var(--white);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--pink), var(--purple), var(--blue), var(--green), var(--yellow), var(--orange));
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--purple);
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-container {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--purple);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--purple);
+        }
+
+        .login-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background-color: #7b1fa2;
+        }
+
+        .error-message {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dashboard-header h2 {
+            color: var(--purple);
+        }
+
+        .logout-btn {
+            padding: 8px 15px;
+            background-color: var(--pink);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #e91e63;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            color: var(--purple);
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: var(--dark-text);
+            font-size: 0.9rem;
+        }
+
+        .submissions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .submissions-table th,
+        .submissions-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .submissions-table th {
+            background-color: var(--light-gray);
+            color: var(--dark-text);
+            font-weight: 600;
+        }
+
+        .submissions-table tr:hover {
+            background-color: var(--light-bg);
+        }
+
+        .download-btn {
+            padding: 6px 12px;
+            background-color: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .download-btn:hover {
+            background-color: #1565c0;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .no-submissions {
+            text-align: center;
+            padding: 30px;
+            color: var(--dark-text);
+            font-style: italic;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .submissions-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SoftZeal Club Admin Dashboard</h1>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-container" id="loginContainer">
+            <div class="error-message" id="loginError">
+                Invalid password. Please try again.
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Admin Password</label>
+                <input type="password" id="password" placeholder="Enter your admin password">
+            </div>
+            
+            <button id="loginBtn" class="login-btn">Login</button>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard-container" id="dashboardContainer">
+            <div class="dashboard-header">
+                <h2>Holi Program Submissions</h2>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3 id="totalSubmissions">0</h3>
+                    <p>Total Submissions</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="todaySubmissions">0</h3>
+                    <p>Today's Submissions</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="uniqueUsers">0</h3>
+                    <p>Unique Participants</p>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search by name, phone, or class...">
+            </div>
+            
+            <div id="submissionsTableContainer">
+                <table class="submissions-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Class</th>
+                            <th>Submission Date</th>
+                            <th>File</th>
+                        </tr>
+                    </thead>
+                    <tbody id="submissionsBody">
+                        <!-- Submissions will be loaded here -->
+                    </tbody>
+                </table>
+                <div class="no-submissions" id="noSubmissions" style="display: none;">
+                    No submissions found.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const loginContainer = document.getElementById('loginContainer');
+    const dashboardContainer = document.getElementById('dashboardContainer');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const loginError = document.getElementById('loginError');
+    const password = document.getElementById('password');
+    const submissionsBody = document.getElementById('submissionsBody');
+    const totalSubmissions = document.getElementById('totalSubmissions');
+    const todaySubmissions = document.getElementById('todaySubmissions');
+    const uniqueUsers = document.getElementById('uniqueUsers');
+    const searchInput = document.getElementById('searchInput');
+    const noSubmissions = document.getElementById('noSubmissions');
+    
+    let submissions = [];
+    
+    // Check if user is already logged in
+    const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+    if (isLoggedIn) {
+        showDashboard();
+        loadSubmissions();
+    }
+    
+    // Login handling
+    loginBtn.addEventListener('click', function() {
+        fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ password: password.value })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Login failed');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Store the actual token
+            localStorage.setItem('adminLoggedIn', 'true');
+            localStorage.setItem('adminToken', data.token);
+            showDashboard();
+            loadSubmissions();
+        })
+        .catch(error => {
+            loginError.style.display = 'block';
+            console.error('Login error:', error);
+        });
+    });
+    
+    // Logout handling
+    logoutBtn.addEventListener('click', function() {
+        localStorage.removeItem('adminLoggedIn');
+        localStorage.removeItem('adminToken');
+        showLogin();
+    });
+    
+    // Search functionality
+    searchInput.addEventListener('input', function() {
+        filterSubmissions(this.value.toLowerCase());
+    });
+    
+    function showLogin() {
+        loginContainer.style.display = 'block';
+        dashboardContainer.style.display = 'none';
+        loginError.style.display = 'none';
+        password.value = '';
+    }
+    
+    function showDashboard() {
+        loginContainer.style.display = 'none';
+        dashboardContainer.style.display = 'block';
+    }
+    
+    function loadSubmissions() {
+        // Fetch submissions from server with proper Authorization header
+        fetch('/api/submissions', {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 401) {
+                    // Unauthorized, show login
+                    localStorage.removeItem('adminLoggedIn');
+                    localStorage.removeItem('adminToken');
+                    showLogin();
+                    throw new Error('Unauthorized');
+                }
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            submissions = data;
+            updateStats(submissions);
+            renderSubmissions(submissions);
+        })
+        .catch(error => {
+            console.error('Error fetching submissions:', error);
+        });
+    }
+    
+    function updateStats(submissions) {
+        // Update total submissions
+        totalSubmissions.textContent = submissions.length;
+        
+        // Calculate today's submissions
+        const today = new Date().toISOString().split('T')[0];
+        const todayCount = submissions.filter(s => {
+            return s.createdAt.split('T')[0] === today;
+        }).length;
+        todaySubmissions.textContent = todayCount;
+        
+        // Calculate unique users
+        const uniquePhones = new Set(submissions.map(s => s.phone));
+        uniqueUsers.textContent = uniquePhones.size;
+    }
+    
+    function renderSubmissions(submissions) {
+        submissionsBody.innerHTML = '';
+        
+        if (submissions.length === 0) {
+            noSubmissions.style.display = 'block';
+            return;
+        }
+        
+        noSubmissions.style.display = 'none';
+        
+        submissions.forEach(submission => {
+            const row = document.createElement('tr');
+            
+            // Format date
+            const date = new Date(submission.createdAt);
+            const formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+            
+            row.innerHTML = `
+                <td>${submission.name}</td>
+                <td>${submission.phone}</td>
+                <td>${submission.class}</td>
+                <td>${formattedDate}</td>
+                <td>
+                    <button class="download-btn" data-id="${submission._id}" data-filename="${submission.originalFileName || 'download'}">
+                        Download
+                    </button>
+                </td>
+            `;
+            
+            submissionsBody.appendChild(row);
+        });
+        
+        // Add event listeners to download buttons
+        document.querySelectorAll('.download-btn').forEach(button => {
+            button.addEventListener('click', handleDownload);
+        });
+    }
+    
+    function handleDownload(event) {
+        const id = event.target.dataset.id;
+        const filename = event.target.dataset.filename;
+        const token = localStorage.getItem('adminToken');
+        
+        fetch(`/api/download/${id}`, {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 401) {
+                    alert('Your session has expired. Please log in again.');
+                    localStorage.removeItem('adminLoggedIn');
+                    localStorage.removeItem('adminToken');
+                    showLogin();
+                    throw new Error('Unauthorized');
+                }
+                throw new Error('Download failed');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            // Create a URL for the blob
+            const url = window.URL.createObjectURL(blob);
+            
+            // Create a temporary anchor element and trigger download
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            
+            // Clean up
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        })
+        .catch(error => {
+            console.error('Download error:', error);
+            if (!error.message.includes('Unauthorized')) {
+                alert('Failed to download file. Please try again.');
+            }
+        });
+    }
+    
+    function filterSubmissions(query) {
+        if (!query) {
+            renderSubmissions(submissions);
+            return;
+        }
+        
+        const filtered = submissions.filter(submission => {
+            return (
+                submission.name.toLowerCase().includes(query) ||
+                submission.phone.includes(query) ||
+                submission.class.toLowerCase().includes(query)
+            );
+        });
+        
+        renderSubmissions(filtered);
+    }
+});
+    </script>
+</body>
+</html>

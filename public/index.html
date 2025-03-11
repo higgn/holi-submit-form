@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoftZeal Club - Holi Upload Form</title>
+    <style>
+        /* Holi-inspired color palette */
+        :root {
+            --pink: #ff3e6c;
+            --purple: #9c27b0;
+            --blue: #1976d2;
+            --green: #4CAF50;
+            --yellow: #ffc107;
+            --orange: #ff5722;
+            --light-bg: #f8f5ff;
+            --white: #ffffff;
+            --dark-text: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: colorChange 10s infinite;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: var(--white);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes colorChange {
+            0% { color: var(--pink); }
+            20% { color: var(--purple); }
+            40% { color: var(--blue); }
+            60% { color: var(--green); }
+            80% { color: var(--yellow); }
+            100% { color: var(--pink); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--dark-text);
+        }
+
+        .form-card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--pink), var(--purple), var(--blue), var(--green), var(--yellow), var(--orange));
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--purple);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--purple);
+        }
+
+        .file-upload {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border: 2px dashed var(--blue);
+            border-radius: 6px;
+            background-color: #f5f8ff;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            background-color: #eef2ff;
+            border-color: var(--purple);
+        }
+
+        .file-upload-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--blue);
+        }
+
+        .file-upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+            margin-top: 15px;
+            font-weight: 500;
+            color: var(--purple);
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #7b1fa2;
+        }
+
+        .success-message, .error-message {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+
+        .error-message {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+
+        .color-dots {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin: 0 5px;
+        }
+
+        .dot-1 { background-color: var(--pink); }
+        .dot-2 { background-color: var(--purple); }
+        .dot-3 { background-color: var(--blue); }
+        .dot-4 { background-color: var(--green); }
+        .dot-5 { background-color: var(--yellow); }
+        .dot-6 { background-color: var(--orange); }
+
+        .loading-spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--purple);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 20px 0;
+            color: var(--dark-text);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-card {
+                padding: 20px;
+            }
+            
+            .submit-btn {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SoftZeal Club - Holi 2025</h1>
+            <p>Share your creative Holi programs with us!</p>
+            <div class="color-dots">
+                <div class="dot dot-1"></div>
+                <div class="dot dot-2"></div>
+                <div class="dot dot-3"></div>
+                <div class="dot dot-4"></div>
+                <div class="dot dot-5"></div>
+                <div class="dot dot-6"></div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="success-message" id="successMessage">
+                Your submission was successful! Happy Holi! 🎉
+            </div>
+            <div class="error-message" id="errorMessage">
+                There was an error with your submission. Please try again.
+            </div>
+            
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="class">Class/Year</label>
+                    <select id="class" name="class" required>
+                        <option value="">Select your class</option>
+                        <option value="First Year">First Year</option>
+                        <option value="Second Year">Second Year</option>
+                        <option value="Third Year">Third Year</option>
+                        <option value="Fourth Year">Fourth Year</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Upload Your Holi Program File</label>
+                    <div class="file-upload">
+                        <input type="file" class="file-upload-input" id="fileUpload" name="fileUpload" required>
+                        <div class="file-upload-label">
+                            <div class="file-upload-icon">📁</div>
+                            <div>Click to browse or drag and drop</div>
+                            <div style="font-size: 0.8em; margin-top: 5px;">(Max file size: 5MB)</div>
+                        </div>
+                        <div class="file-name" id="fileName"></div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit Your Program</button>
+            </form>
+            
+            <div class="loading-spinner" id="loadingSpinner"></div>
+        </div>
+        
+        <footer>
+            <p>© 2025 SoftZeal Club. All rights reserved.</p>
+            <p>A colorful celebration of coding and creativity!</p>
+            <a href="admin.html" style="color: var(--purple); text-decoration: none; margin-top: 10px; display: inline-block;">Admin Login</a>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // File upload handling
+            const fileUpload = document.getElementById('fileUpload');
+            const fileName = document.getElementById('fileName');
+            
+            fileUpload.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    fileName.textContent = file.name;
+                    
+                    // Check file size (max 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('File size exceeds 5MB limit. Please choose a smaller file.');
+                        this.value = '';
+                        fileName.textContent = '';
+                    }
+                }
+            });
+            
+            // Form submission
+            const form = document.getElementById('uploadForm');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Hide any previous messages
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                // Show loading spinner
+                loadingSpinner.style.display = 'block';
+                
+                // Create FormData object
+                const formData = new FormData(form);
+                
+                // Send data to server
+                fetch('/api/submit', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    loadingSpinner.style.display = 'none';
+                    
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    successMessage.style.display = 'block';
+                    form.reset();
+                    fileName.textContent = '';
+                    
+                    // Scroll to success message
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+                })
+                .catch(error => {
+                    errorMessage.style.display = 'block';
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
