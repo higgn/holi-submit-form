@@ -330,7 +330,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+       document.addEventListener('DOMContentLoaded', function() {
     const loginContainer = document.getElementById('loginContainer');
     const dashboardContainer = document.getElementById('dashboardContainer');
     const loginBtn = document.getElementById('loginBtn');
@@ -442,7 +442,8 @@
         // Calculate today's submissions
         const today = new Date().toISOString().split('T')[0];
         const todayCount = submissions.filter(s => {
-            return s.createdAt.split('T')[0] === today;
+            const submissionDate = new Date(s.createdAt).toISOString().split('T')[0];
+            return submissionDate === today;
         }).length;
         todaySubmissions.textContent = todayCount;
         
@@ -494,6 +495,14 @@
         const filename = event.target.dataset.filename;
         const token = localStorage.getItem('adminToken');
         
+        // Create a temporary anchor element to handle the download
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = `/api/download/${id}`;
+        a.download = filename;
+        a.setAttribute('target', '_blank');
+        
+        // Set the Authorization header through a GET request
         fetch(`/api/download/${id}`, {
             headers: {
                 'Authorization': 'Bearer ' + token
@@ -515,12 +524,7 @@
         .then(blob => {
             // Create a URL for the blob
             const url = window.URL.createObjectURL(blob);
-            
-            // Create a temporary anchor element and trigger download
-            const a = document.createElement('a');
-            a.style.display = 'none';
             a.href = url;
-            a.download = filename;
             document.body.appendChild(a);
             a.click();
             
