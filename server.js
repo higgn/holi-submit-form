@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
@@ -6,31 +5,24 @@ const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { GridFSBucket, ObjectId } = require('mongodb');
 const app = express();
 const MONGO_URI = process.env.MONGO_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 const PORT = process.env.PORT || 3000;
+
 // MongoDB connection
 mongoose.connect(MONGO_URI)
-  .then(() => console.log('Connected to MongoDB'))
+  .then(() => {
+    console.log('Connected to MongoDB');
+    // Initialize GridFS bucket
+    const db = mongoose.connection.db;
+    fileBucket = new GridFSBucket(db, { bucketName: 'uploads' });
+  })
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Set up storage for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, 'uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir);
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, uniqueSuffix + ext);
-  }
-});
-
+// Set up memory storage for multer (temporary before storing in GridFS)
+const storage = multer.memoryStorage();
 const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
@@ -45,9 +37,9 @@ const submissionSchema = new mongoose.Schema({
   name: { type: String, required: true },
   phone: { type: String, required: true },
   class: { type: String, required: true },
-  fileName: { type: String, required: true },
-  filePath: { type: String, required: true },
+  fileId: { type: mongoose.Schema.Types.ObjectId, required: true },
   originalFileName: { type: String, required: true },
+  contentType: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -57,7 +49,6 @@ const Submission = mongoose.model('Submission', submissionSchema);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 // Authentication middleware
 const authenticate = (req, res, next) => {
@@ -99,15 +90,36 @@ app.post('/api/submit', upload.single('fileUpload'), async (req, res) => {
     }
 
     const { name, phone, class: studentClass } = req.body;
+    
+    // Store file in GridFS
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const uploadStream = fileBucket.openUploadStream(
+      uniqueSuffix + '-' + req.file.originalname,
+      {
+        contentType: req.file.mimetype,
+        metadata: {
+          originalFileName: req.file.originalname,
+          uploader: name
+        }
+      }
+    );
+    
+    uploadStream.end(req.file.buffer);
+    
+    // Wait for the upload to complete
+    await new Promise((resolve, reject) => {
+      uploadStream.on('finish', resolve);
+      uploadStream.on('error', reject);
+    });
 
     // Create new submission
     const submission = new Submission({
       name,
       phone,
       class: studentClass,
-      fileName: req.file.filename,
-      filePath: req.file.path,
-      originalFileName: req.file.originalname
+      fileId: uploadStream.id,
+      originalFileName: req.file.originalname,
+      contentType: req.file.mimetype
     });
 
     await submission.save();
@@ -166,7 +178,28 @@ app.get('/api/download/:id', authenticate, async (req, res) => {
       return res.status(404).json({ message: 'Submission not found' });
     }
 
-    res.download(submission.filePath, submission.originalFileName);
+    const downloadStream = fileBucket.openDownloadStream(submission.fileId);
+    
+    // Set appropriate headers for file download
+    res.set({
+      'Content-Type': submission.contentType,
+      'Content-Disposition': `attachment; filename="${submission.originalFileName}"`,
+    });
+
+    // Pipe the file stream to the response
+    downloadStream.pipe(res);
+    
+    // Handle any errors
+    downloadStream.on('error', (err) => {
+      console.error('Download stream error:', err);
+      // If the response hasn't been sent yet, send an error response
+      if (!res.headersSent) {
+        res.status(404).json({ message: 'File not found' });
+      } else {
+        // If headers have been sent, we need to end the response
+        res.end();
+      }
+    });
   } catch (error) {
     console.error('Download error:', error);
     res.status(500).json({ message: 'Failed to download file' });
