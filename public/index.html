@@ -1,731 +1,583 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SoftZeal Club - Holi Upload Form</title>
-    <!-- Google Fonts import -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Raleway:wght@700;800&display=swap" rel="stylesheet">
+    <title>Award-Winning 3D Card Design</title>
     <style>
-        /* Holi-inspired color palette */
-        :root {
-            --pink: #ff3e6c;
-            --purple: #9c27b0;
-            --blue: #1976d2;
-            --green: #4CAF50;
-            --yellow: #ffc107;
-            --orange: #ff5722;
-            --light-bg: #f8f5ff;
-            --white: #ffffff;
-            --dark-text: #333333;
-        }
-
-        * {
+        /* Modern Reset */
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --card-width: min(80vw, 350px);
+            --card-height: calc(var(--card-width) * 1.4);
+            --card-border-radius: 20px;
+            --card-shine-opacity: 0.3;
+            --card-shadow-opacity: 0.8;
+            --card-shadow-height-fraction: 0.85;
+            --card-shadow-color: rgba(0, 0, 0, 0.5);
+            --card-transition-time: 400ms;
+            --card-transition-easing: cubic-bezier(0.23, 1, 0.32, 1);
+            --audio-control-size: 50px;
+            --audio-control-color: rgba(255, 255, 255, 0.8);
+            --audio-control-bg: rgba(0, 0, 0, 0.5);
         }
 
         body {
-            color: var(--dark-text);
-            line-height: 1.6;
-            overflow-x: hidden;
-            background-color: var(--light-bg);
-        }
-
-        /* Video Background */
-        .video-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .video-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.7);
-        }
-
-        #holiVideo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            transform: translateX(-50%) translateY(-50%);
-        }
-
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--white);
+            font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-        }
-
-        .color-splash {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            opacity: 0;
-            animation: splashAnimation 3s ease-out forwards;
-        }
-
-        @keyframes splashAnimation {
-            0% {
-                transform: scale(0);
-                opacity: 0;
-            }
-
-            50% {
-                opacity: 0.7;
-            }
-
-            100% {
-                transform: scale(15);
-                opacity: 0;
-            }
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-            animation: fadeInUp 1s ease-out;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes colorChange {
-            0% {
-                color: var(--pink);
-            }
-
-            20% {
-                color: var(--purple);
-            }
-
-            40% {
-                color: var(--blue);
-            }
-
-            60% {
-                color: var(--green);
-            }
-
-            80% {
-                color: var(--yellow);
-            }
-
-            100% {
-                color: var(--pink);
-            }
-        }
-
-        .header h1 {
-            font-family: 'Raleway', sans-serif;
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            animation: colorChange 10s infinite;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            letter-spacing: 1px;
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            color: var(--dark-text);
-            font-weight: 300;
-            letter-spacing: 0.5px;
-        }
-
-        /* Dynamic Border Animation */
-        @keyframes borderAnimation {
-            0% {
-                border-image-source: linear-gradient(45deg, var(--pink), var(--purple));
-            }
-            20% {
-                border-image-source: linear-gradient(90deg, var(--purple), var(--blue));
-            }
-            40% {
-                border-image-source: linear-gradient(135deg, var(--blue), var(--green));
-            }
-            60% {
-                border-image-source: linear-gradient(180deg, var(--green), var(--yellow));
-            }
-            80% {
-                border-image-source: linear-gradient(225deg, var(--yellow), var(--orange));
-            }
-            100% {
-                border-image-source: linear-gradient(270deg, var(--orange), var(--pink));
-            }
-        }
-
-        .form-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(5px);
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-            position: relative;
+            background: url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnlzcGN5Z2lkdWZ0dmpma3djc2cxMzlseHBleDdkYnhiZWRnZncxciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cmegx6SssTKmEFEcwj/giphy.gif') no-repeat center center fixed;
+            background-size: cover;
             overflow: hidden;
-            animation: fadeInUp 1s ease-out 0.3s both;
-            border: 3px solid;
-            border-color:#f8f5ff;
+            perspective: 1200px;
+            padding: 2rem;
         }
 
-        /* Adding glow effect to the border */
-        .form-card::after {
-            content: "";
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--pink), var(--purple), var(--blue), var(--green), var(--yellow), var(--orange));
-            z-index: -1;
-            filter: blur(15px);
-            opacity: 0.7;
-            border-radius: 14px;
-            animation: borderAnimation 10s infinite alternate;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--purple);
-            font-size: 0.95rem;
-            letter-spacing: 0.5px;
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 14px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background-color: rgba(255, 255, 255, 0.7);
-            font-family: 'Poppins', sans-serif;
-            font-weight: 300;
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--purple);
-            box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.2);
-            background-color: white;
-        }
-
-        .file-upload {
+        .scene {
+            width: var(--card-width);
+            height: var(--card-height);
+            perspective: 2000px;
+            transform-style: preserve-3d;
             position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 30px;
-            border: 2px dashed var(--blue);
-            border-radius: 8px;
-            background-color: rgba(245, 248, 255, 0.7);
-            transition: all 0.3s ease;
-            overflow: hidden;
         }
 
-        .file-upload::after {
-            content: "";
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background: linear-gradient(45deg, var(--blue), var(--purple));
-            z-index: -1;
-            filter: blur(15px);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .file-upload:hover::after {
-            opacity: 0.5;
-        }
-
-        .file-upload:hover {
-            background-color: rgba(238, 242, 255, 0.9);
-            border-color: var(--purple);
-            transform: translateY(-3px);
-        }
-
-        .file-upload-input {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .card {
             width: 100%;
             height: 100%;
-            opacity: 0;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(0) rotateY(0);
+            transition: transform var(--card-transition-time) var(--card-transition-easing);
+            border-radius: var(--card-border-radius);
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.7);
             cursor: pointer;
         }
 
-        .file-upload-label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--blue);
-            font-weight: 500;
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: var(--card-border-radius);
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
         }
 
-        .file-upload-icon {
-            font-size: 50px;
-            margin-bottom: 15px;
+        .card-front {
+            background: rgba(20, 20, 30, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-shine {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: var(--card-border-radius);
+            background: linear-gradient(
+                135deg, 
+                rgba(255, 255, 255, 0) 0%, 
+                rgba(255, 255, 255, var(--card-shine-opacity)) 80%
+            );
+            transform: translateZ(1px);
+            opacity: 0;
+            transition: opacity var(--card-transition-time) var(--card-transition-easing);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 65%;
+            object-fit: cover;
+            border-top-left-radius: var(--card-border-radius);
+            border-top-right-radius: var(--card-border-radius);
+            transform-origin: center;
+            transition: transform 0.8s var(--card-transition-easing);
+            z-index: 1;
+        }
+
+        .card-content {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 35%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border-bottom-left-radius: var(--card-border-radius);
+            border-bottom-right-radius: var(--card-border-radius);
+            transform: translateZ(20px);
+            z-index: 1;
+        }
+
+        .card-title {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            font-weight: 600;
+            opacity: 0.95;
+            transform: translateZ(40px);
+        }
+
+        .card-text {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            transform: translateZ(30px);
+            max-width: 85%;
+            font-weight: 300;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-shadow {
+            position: absolute;
+            width: 90%;
+            height: 40px;
+            bottom: -50px;
+            left: 5%;
+            background: rgba(0, 0, 0, 0.3);
+            filter: blur(20px);
+            border-radius: 50%;
+            transform-origin: center;
+            transform: rotateX(90deg) translateZ(-15px) scale(0.8, 0.5);
+            opacity: 0.6;
+            transition: all var(--card-transition-time) var(--card-transition-easing);
+        }
+
+        /* Audio control */
+        .audio-control {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: var(--audio-control-size);
+            height: var(--audio-control-size);
+            background: var(--audio-control-bg);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transform: translateZ(50px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .audio-control:hover {
+            transform: translateZ(50px) scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .audio-control:active {
+            transform: translateZ(50px) scale(0.95);
+        }
+
+        .audio-control svg {
+            width: 50%;
+            height: 50%;
+            fill: var(--audio-control-color);
             transition: transform 0.3s ease;
         }
 
-        .file-upload:hover .file-upload-icon {
+        .audio-control.playing .play-icon {
+            display: none;
+        }
+
+        .audio-control:not(.playing) .pause-icon {
+            display: none;
+        }
+
+        /* Audio wave visualization */
+        .audio-waves {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            align-items: flex-end;
+            height: 30px;
+            gap: 3px;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            transform: translateZ(30px);
+        }
+
+        .audio-control.playing + .audio-waves {
+            opacity: 1;
+        }
+
+        .wave {
+            width: 3px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 3px;
+            transform-origin: bottom;
+        }
+
+        /* Floating animation for the card */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .scene {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Subtle pulsing animation for the content */
+        @keyframes pulse {
+            0% { transform: translateZ(30px) scale(1); }
+            50% { transform: translateZ(30px) scale(1.05); }
+            100% { transform: translateZ(30px) scale(1); }
+        }
+
+        .card-title {
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        /* Audio wave animation */
+        @keyframes wave1 { 0%, 100% { height: 5px; } 50% { height: 15px; } }
+        @keyframes wave2 { 0%, 100% { height: 18px; } 50% { height: 8px; } }
+        @keyframes wave3 { 0%, 100% { height: 12px; } 50% { height: 20px; } }
+        @keyframes wave4 { 0%, 100% { height: 10px; } 50% { height: 25px; } }
+        @keyframes wave5 { 0%, 100% { height: 22px; } 50% { height: 7px; } }
+
+        /* Particle effect */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: var(--card-border-radius);
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.4);
+            pointer-events: none;
+            transform: translateZ(0);
+        }
+
+        /* Better mobile responsiveness */
+        @media (max-width: 768px) {
+            :root {
+                --card-width: min(90vw, 320px);
+                --audio-control-size: 40px;
+            }
+
+            .card-content {
+                height: 40%;
+            }
+            
+            .card-image {
+                height: 60%;
+            }
+        }
+
+        /* Interactive hover glow for better visual feedback */
+        .card:hover .card-shine {
+            opacity: 1;
+        }
+
+        .card:hover .card-image {
             transform: scale(1.1);
         }
 
-        .file-name {
-            margin-top: 15px;
-            font-weight: 500;
-            color: var(--purple);
-        }
-
-        .submit-btn {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            background-color: var(--purple);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .submit-btn:hover {
-            background-color: #7b1fa2;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-
-        .submit-btn::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50%);
-            transform-origin: 50% 50%;
-        }
-
-        .submit-btn:focus:not(:active)::after {
-            animation: ripple 1s ease-out;
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(0, 0);
-                opacity: 0.5;
+        /* Media query for devices with reduced motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            .scene, .card-title {
+                animation: none;
             }
-
-            100% {
-                transform: scale(20, 20);
-                opacity: 0;
-            }
-        }
-
-        .success-message,
-        .error-message {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            display: none;
-            animation: fadeInUp 0.5s ease-out;
-            font-weight: 500;
-        }
-
-        .success-message {
-            background-color: rgba(223, 240, 216, 0.9);
-            color: #3c763d;
-            border: 1px solid #d6e9c6;
-        }
-
-        .error-message {
-            background-color: rgba(242, 222, 222, 0.9);
-            color: #a94442;
-            border: 1px solid #ebccd1;
-        }
-
-        .color-dots {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .dot {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            margin: 0 5px;
-            position: relative;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            animation: pulse 2s infinite;
-        }
-
-        .dot-1 {
-            background-color: var(--pink);
-            animation-delay: 0s;
-        }
-
-        .dot-2 {
-            background-color: var(--purple);
-            animation-delay: 0.4s;
-        }
-
-        .dot-3 {
-            background-color: var(--blue);
-            animation-delay: 0.8s;
-        }
-
-        .dot-4 {
-            background-color: var(--green);
-            animation-delay: 1.2s;
-        }
-
-        .dot-5 {
-            background-color: var(--yellow);
-            animation-delay: 1.6s;
-        }
-
-        .dot-6 {
-            background-color: var(--orange);
-            animation-delay: 2s;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.2);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        .loading-spinner {
-            display: none;
-            width: 40px;
-            height: 40px;
-            margin: 20px auto;
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top-color: var(--purple);
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            padding: 20px 0;
-            color: var(--dark-text);
-            font-size: 0.9rem;
-            background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(5px);
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            animation: fadeInUp 1s ease-out 0.6s both;
-            font-weight: 300;
-        }
-
-        footer a {
-            color: var(--purple);
-            text-decoration: none;
-            margin-top: 10px;
-            display: inline-block;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        footer a:hover {
-            color: var(--pink);
-            transform: translateY(-2px);
-        }
-
-        /* Responsive styles */
-        @media screen and (max-width: 600px) {
-            .container {
-                padding: 10px;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .form-card {
-                padding: 20px;
-            }
-
-            .submit-btn {
-                padding: 12px;
+            
+            .card, .card-image, .card-shine {
+                transition: none;
             }
         }
     </style>
 </head>
-
 <body>
-    <!-- Loading Screen with Color Splash Effect -->
-    <div class="loading-screen" id="loadingScreen">
-        <!-- Color splashes will be added dynamically via JS -->
-    </div>
-
-    <!-- Video Background -->
-    <div class="video-container">
-        <video id="holiVideo" autoplay muted loop playsinline>
-            <source src="holi.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </div>
-
-    <div class="container">
-        <div class="header">
-            <h1>SoftZeal Club - Holi 2025</h1>
-            <p>Share your creative Holi programs with us!</p>
-            <div class="color-dots">
-                <div class="dot dot-1"></div>
-                <div class="dot dot-2"></div>
-                <div class="dot dot-3"></div>
-                <div class="dot dot-4"></div>
-                <div class="dot dot-5"></div>
-                <div class="dot dot-6"></div>
+    <div class="scene">
+        <div class="card">
+            <div class="card-shadow"></div>
+            <div class="card-face card-front">
+                <div class="card-shine"></div>
+                <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZmR5YWVibXNrY3B5bHhpNXowNnA2YXgxeXJicGIyNjhpNWF1cno2MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TcP0ehhScrzwbnntBW/giphy.gif" alt="Magical Animation" class="card-image">
+                <div class="audio-control">
+                    <svg class="play-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <svg class="pause-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                </div>
+                <div class="audio-waves">
+                    <div class="wave" style="animation: wave1 1.2s ease-in-out infinite;"></div>
+                    <div class="wave" style="animation: wave2 0.8s ease-in-out infinite;"></div>
+                    <div class="wave" style="animation: wave3 1.5s ease-in-out infinite;"></div>
+                    <div class="wave" style="animation: wave4 1.1s ease-in-out infinite;"></div>
+                    <div class="wave" style="animation: wave5 0.9s ease-in-out infinite;"></div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">Hello 😉</h2>
+                    <p class="card-text">Event is Closed✨</p>
+                </div>
+                <div class="particles"></div>
             </div>
         </div>
-
-        <div class="form-card">
-            <div class="success-message" id="successMessage">
-                Your submission was successful! Happy Holi! 🎉
-            </div>
-            <div class="error-message" id="errorMessage">
-                There was an error with your submission. Please try again.
-            </div>
-
-            <form id="uploadForm">
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="class">Class/Year</label>
-                    <select id="class" name="class" required>
-                        <option value="">Select your class</option>
-                        <option value="First Year">First Year</option>
-                        <option value="Second Year">Second Year</option>
-                        <option value="Third Year">Third Year</option>
-                        <option value="Fourth Year">Fourth Year</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Upload Your Holi Program File</label>
-                    <div class="file-upload">
-                        <input type="file" class="file-upload-input" id="fileUpload" name="fileUpload" required>
-                        <div class="file-upload-label">
-                            <div class="file-upload-icon">📁</div>
-                            <div>Click to browse or drag and drop</div>
-                            <div style="font-size: 0.8em; margin-top: 5px;">(Max file size: 5MB)</div>
-                        </div>
-                        <div class="file-name" id="fileName"></div>
-                    </div>
-                </div>
-
-                <button type="submit" class="submit-btn">Submit Your Program</button>
-            </form>
-
-            <div class="loading-spinner" id="loadingSpinner"></div>
-        </div>
-
-        <footer>
-            <p>© 2025 SoftZeal Club. All rights reserved.</p>
-            <p>A colorful celebration of coding and creativity!</p>
-            <a href="admin.html">Admin Login</a>
-        </footer>
     </div>
+
+    <audio id="background-music" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Splash color animation on loading screen
-            const loadingScreen = document.getElementById('loadingScreen');
-            const colors = ['#ff3e6c', '#9c27b0', '#1976d2', '#4CAF50', '#ffc107', '#ff5722'];
-
-            // Create color splashes
-            for (let i = 0; i < 10; i++) {
-                setTimeout(() => {
-                    const splash = document.createElement('div');
-                    splash.classList.add('color-splash');
-                    splash.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    splash.style.left = Math.random() * 100 + '%';
-                    splash.style.top = Math.random() * 100 + '%';
-
-                    loadingScreen.appendChild(splash);
-                }, i * 300);
-            }
-
-            // Hide loading screen after animations
-            setTimeout(() => {
-                loadingScreen.style.opacity = '0';
-                setTimeout(() => {
-                    loadingScreen.style.visibility = 'hidden';
-                }, 500);
-            }, 3500);
-
-            // File upload handling
-            const fileUpload = document.getElementById('fileUpload');
-            const fileName = document.getElementById('fileName');
-
-            fileUpload.addEventListener('change', function () {
-                if (this.files && this.files[0]) {
-                    const file = this.files[0];
-                    fileName.textContent = file.name;
-
-                    // Check file size (max 5MB)
-                    if (file.size > 5 * 1024 * 1024) {
-                        alert('File size exceeds 5MB limit. Please choose a smaller file.');
-                        this.value = '';
-                        fileName.textContent = '';
-                    }
-                }
-            });
-
-            // Form submission
-            const form = document.getElementById('uploadForm');
-            const successMessage = document.getElementById('successMessage');
-            const errorMessage = document.getElementById('errorMessage');
-            const loadingSpinner = document.getElementById('loadingSpinner');
-
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                // Hide any previous messages
-                successMessage.style.display = 'none';
-                errorMessage.style.display = 'none';
-
-                // Show loading spinner
-                loadingSpinner.style.display = 'block';
-
-                // Create FormData object
-                const formData = new FormData(form);
-
-                // Send data to server
-                fetch('/api/submit', {
-                    method: 'POST',
-                    body: formData
+        // 3D Card Tilt Effect
+       // 3D Card Tilt Effect
+document.addEventListener('DOMContentLoaded', () => {
+    const card = document.querySelector('.card');
+    const scene = document.querySelector('.scene');
+    const cardShine = document.querySelector('.card-shine');
+    const cardShadow = document.querySelector('.card-shadow');
+    const audioControl = document.querySelector('.audio-control');
+    const audioElement = document.getElementById('background-music');
+    
+    // Track if device has motion capability
+    let hasDeviceMotion = false;
+    
+    // Variables for touch movement
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let initialRotateX = 0;
+    let initialRotateY = 0;
+    
+    // Audio control functionality
+    audioControl.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent card click event
+        
+        if (audioElement.paused) {
+            audioElement.play()
+                .then(() => {
+                    audioControl.classList.add('playing');
                 })
-                    .then(response => {
-                        loadingSpinner.style.display = 'none';
-
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        successMessage.style.display = 'block';
-                        form.reset();
-                        fileName.textContent = '';
-
-                        // Scroll to success message
-                        successMessage.scrollIntoView({ behavior: 'smooth' });
-                    })
-                    .catch(error => {
-                        errorMessage.style.display = 'block';
-                        console.error('Error:', error);
-                    });
-            });
-        });
-    </script>
+                .catch(err => {
+                    console.log('Audio play error:', err);
+                });
+        } else {
+            audioElement.pause();
+            audioControl.classList.remove('playing');
+        }
+    });
+    
+    // For gyroscope effect
+    window.addEventListener('devicemotion', () => {
+        hasDeviceMotion = true;
+    }, { once: true });
+    
+    // Create particles
+    const particles = document.querySelector('.particles');
+    const particleCount = 20;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random position
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        
+        // Random size
+        const size = Math.random() * 4 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Random opacity
+        particle.style.opacity = Math.random() * 0.5 + 0.3;
+        
+        // Random animation
+        const animDuration = Math.random() * 20 + 10;
+        particle.style.animation = `float ${animDuration}s ease-in-out infinite`;
+        particle.style.animationDelay = `${Math.random() * 10}s`;
+        
+        particles.appendChild(particle);
+    }
+    
+    // Mouse move effect for desktop
+    document.addEventListener('mousemove', (e) => {
+        if (hasDeviceMotion) return; // Skip if device has motion sensors
+        
+        const rect = card.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        // Calculate distance from center as percentage
+        const percentX = (e.clientX - centerX) / (rect.width / 2);
+        const percentY = (e.clientY - centerY) / (rect.height / 2);
+        
+        // Calculate rotation (max 10 degrees)
+        const maxRotation = 15;
+        const rotateY = -percentX * maxRotation;
+        const rotateX = percentY * maxRotation;
+        
+        // Apply rotation with smooth transition
+        card.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+        
+        // Update shine effect
+        cardShine.style.opacity = 0.1 + Math.abs(percentX * percentY) * 0.5;
+        
+        // Update shadow position
+        updateShadow(percentX, percentY);
+    });
+    
+    // Reset on mouse leave
+    document.addEventListener('mouseleave', () => {
+        if (hasDeviceMotion) return;
+        
+        card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        cardShine.style.opacity = 0;
+        cardShadow.style.transform = 'rotateX(90deg) translateZ(-15px) scale(0.8, 0.5)';
+    });
+    
+    // Touch events for mobile
+    card.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            
+            // Get current rotation if any
+            const transform = getComputedStyle(card).transform;
+            const matrix = new DOMMatrix(transform);
+            initialRotateY = Math.atan2(matrix.m13, matrix.m11) * (180 / Math.PI);
+            initialRotateX = Math.atan2(-matrix.m23, matrix.m22) * (180 / Math.PI);
+        }
+    });
+    
+    card.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = card.getBoundingClientRect();
+            
+            // Calculate the touch distance from start
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+            
+            // Apply rotation (scale down the effect for touch)
+            const sensitivity = 0.2;
+            const rotateY = initialRotateY + (deltaX * sensitivity);
+            const rotateX = initialRotateX - (deltaY * sensitivity);
+            
+            // Limit rotation to ±20 degrees
+            const clampedRotateY = Math.max(-20, Math.min(20, rotateY));
+            const clampedRotateX = Math.max(-20, Math.min(20, rotateX));
+            
+            card.style.transform = `rotateY(${clampedRotateY}deg) rotateX(${clampedRotateX}deg)`;
+            
+            // Calculate percentages for effects
+            const percentX = clampedRotateY / 20;
+            const percentY = clampedRotateX / 20;
+            
+            // Update shine and shadow
+            cardShine.style.opacity = 0.1 + Math.abs(percentX * percentY) * 0.5;
+            updateShadow(percentX, percentY);
+        }
+    });
+    
+    card.addEventListener('touchend', () => {
+        card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        cardShine.style.opacity = 0;
+        cardShadow.style.transform = 'rotateX(90deg) translateZ(-15px) scale(0.8, 0.5)';
+    });
+    
+    // Device orientation for mobile/tablet
+    window.addEventListener('deviceorientation', (e) => {
+        if (!e.beta || !e.gamma) return;
+        
+        hasDeviceMotion = true;
+        
+        // Get orientation values (beta: front/back tilt, gamma: left/right tilt)
+        const beta = Math.min(Math.max(e.beta, -45), 45);  // front/back tilt
+        const gamma = Math.min(Math.max(e.gamma, -45), 45); // left/right tilt
+        
+        // Convert to percentage (-1 to 1)
+        const percentX = gamma / 45;
+        const percentY = beta / 45;
+        
+        // Calculate rotation (max 15 degrees)
+        const maxRotation = 15;
+        const rotateY = percentX * maxRotation;
+        const rotateX = -percentY * maxRotation;
+        
+        // Apply rotation with some dampening for smoother effect
+        card.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+        
+        // Update shine effect
+        cardShine.style.opacity = 0.1 + Math.abs(percentX * percentY) * 0.5;
+        
+        // Update shadow position
+        updateShadow(percentX, percentY);
+    });
+    
+    // Function to update shadow position based on tilt
+    function updateShadow(percentX, percentY) {
+        // Calculate shadow position offset
+        const shadowOffsetX = -percentX * 30;  // Move shadow opposite to tilt
+        const shadowOffsetY = -percentY * 30;  // Move shadow opposite to tilt
+        const shadowScale = 0.8 - (Math.abs(percentX) + Math.abs(percentY)) * 0.1;
+        
+        cardShadow.style.transform = `
+            rotateX(90deg) 
+            translateZ(-15px) 
+            translateX(${shadowOffsetX}px) 
+            translateY(${shadowOffsetY}px) 
+            scale(${shadowScale}, 0.5)
+        `;
+        
+        // Adjust shadow opacity based on tilt
+        const tiltAmount = Math.abs(percentX) + Math.abs(percentY);
+        cardShadow.style.opacity = 0.6 - tiltAmount * 0.2;
+    }
+    
+    // Card click effect (flip or action)
+    card.addEventListener('click', () => {
+        // Add a quick scale effect on click
+        card.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            card.style.transform = 'scale(1)';
+        }, 150);
+    });
+    
+    // Preload audio
+    audioElement.load();
+});
+</script>
 </body>
-
 </html>
